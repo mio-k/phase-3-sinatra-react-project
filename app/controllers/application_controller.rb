@@ -6,13 +6,13 @@ class ApplicationController < Sinatra::Base
     dogs.to_json(include: [:orders])
   end
 
-  get "/dogs/:id" do
-    dog = Dog.find(params[:id])
+  get "/dogs/:dog_id" do
+    dog = Dog.find(params[:dog_id])
     dog.to_json(include: [:orders])
   end
 
-  delete "/dogs/:id" do
-    dog = Dog.find(params[:id])
+  delete "/dogs/:dog_id" do
+    dog = Dog.find(params[:dog_id])
     dog.destroy
   end
 
@@ -26,24 +26,31 @@ class ApplicationController < Sinatra::Base
     orders.to_json
   end
 
-  get "/orders/:id" do
-    order = Order.find(params[:id])
-    order.to_json
+  get "/orders/:order_id" do
+    order = Order.find(params[:order_id])
+    dog = order.dog
+    order.to_json(include: [:dog])
   end
 
   post "/orders" do
     order = Order.create(dog_id: params[:dog_id], item: params[:item], quantity: params[:quantity], pickup_date: params[:pickup_date])
+    dog = order.dog
+    dog.to_json
     order.to_json
   end
 
-  patch "/orders/:id" do
-    order = Order.find(params[:id])
+  patch "/orders/:order_id" do
+    order = Order.find(params[:order_id])
     order.update(item: params[:item], quantity: params[:quantity], pickup_date: params[:pickup_date] )
+    dog = order.dog
+    dog.to_json
     order.to_json
   end
 
-  delete "/orders/:id" do
-    order = Order.find(params[:id])
+  delete "/orders/:order_id" do
+    order = Order.find(params[:order_id])
+    dog = order.dog
+    dog.to_json
     order.destroy
   end
 
