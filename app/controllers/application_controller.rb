@@ -33,9 +33,8 @@ class ApplicationController < Sinatra::Base
   end
 
   post "/orders" do
-    order = Order.create(dog_id: params[:dog_id], item: params[:item], quantity: params[:quantity], pickup_date: params[:pickup_date])
-    dog = order.dog
-    dog.to_json
+    dog = Dog.find(params[:dog_id])
+    order = dog.orders.create(item: params[:item], quantity: params[:quantity], pickup_date: params[:pickup_date])
     order.to_json
   end
 
